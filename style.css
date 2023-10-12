@@ -136,6 +136,7 @@ section
 }
 .logo-png
 {
+    width: 200px;
     position: absolute;
     top: 0;
     right: 0;
