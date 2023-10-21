@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700,300">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.1.2/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400&family=Finger+Paint&display=swap">
     <img class="logo-png" src="logo.png" href="https://i.imgflip.com/53246t.jpg" alt="Možná je to ono">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,6 +41,20 @@
     </label>
     </div>
 <section>
+     <div class="card">
+    <div id="header">
+      <h1>Chatter box!</h1>
+    </div>
+    <div id="message-section">
+      <div class="message" id="bot"><span id="bot-response">Hello.. I'm listening! Go on..</span></div>
+    </div>
+    <div id="input-section">
+      <input id="input" type="text" placeholder="Type a message" autocomplete="off" autofocus="autofocus"/>
+      <button class="send" onclick="sendMessage()">
+        <div class="circle"><i class="zmdi zmdi-mail-send"></i></div>
+      </button>
+    </div>
+  </div>
     <div class="sec" id="sec">
         <h2>Pomoc</h2>
         <p>Nejde vám spustit: Hry, nebo Kontakt?<br><br>Kliknutím pravým tlačítkem (na...pro příklad: Hry)<br><br> si zkopírujte odkaz a ten vložtě do vyhledávací lišty.</p>
@@ -101,6 +121,7 @@
     <a href="#sec5" id="btn3">zpět</a>
     <a href="https://imgflip.com/s/meme/Cute-Cat.jpg">.</a>
     <script>
+        src="script.js"
         let text = document.GetElementById('text');
         let btn = document.GetElementById('btn');
         let zpět = document.GetElementById('zpět')
