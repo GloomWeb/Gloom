@@ -1,0 +1,296 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: right;
+}
+input[type="checkbox"]
+{
+    -webkit-appearance: none;
+    visibility: hidden;
+    display: none;
+}
+.check
+{
+    position: relative;
+    top: 100px;
+    left: 10px;
+    display: block;
+    width: 70px;
+    height: 30px;
+    background: #092c3e;
+    cursor: pointer;
+    border-radius: 30px;
+    overflow: hidden;
+    transition: ease-in 0.5s;
+}
+input[type="checkbox"]:checked ~ .check
+{
+    background: #fff;
+    box-shadow: 0 0 0 30000px #303030;
+}
+.check:before
+{
+    content: '';
+    position: absolute;
+    top: 2px;
+    left:  2px;
+    background: #fff;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    transition: 0.5s;
+}
+input[type="checkbox"]:checked ~ .check:before
+{
+transform: translateX(-50px);
+}
+.check:after
+{
+    content: '';
+    position: absolute;
+    top: 2px;
+    right:  2px;
+    background: #092c3e;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    transition: 0.5s;
+    transform: translateX(50px);
+}
+input[type="checkbox"]:checked ~ .check:after
+{
+transform: translateX(0px);
+}
+{
+    margin: 0;
+    padding: 0;
+    max-width: 10px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body
+{
+    min-height: 100vh;
+    max-width: 65%;
+    background: #9cb1da;
+    position: right;
+
+}
+header
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10000;
+}
+header .logo
+{
+    color: #fff;
+    font-weight: 50;
+    text-decoration: none;
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+header ul
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header ul li
+{
+    list-style: none;
+    margin-left: 20px;
+}
+header ul li a
+{
+    text-decoration: none;
+    padding: 6px 15px;
+    color: #fff;
+    border-radius: 20px;
+}
+header ul li a:hover,
+header ul li a.active
+{
+    background-color: #fff;
+    color: #2b1055;
+}
+section
+{
+    position: relative;
+    width: 67%;
+    height: 100vh;
+    padding: 100px;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+.pngtree-halloween-pumpkin-burning-png-image_6207123.png
+{
+    width: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+#text
+{
+    position: absolute;
+    color: #fff;
+    white-space: nowrap;
+    font-size: 7.5vw;
+    z-index: 9;
+}
+#textos
+{
+    position: absolute;
+    color: #9000ffa0;
+    white-space: normal;
+    font-size: 14.8vw;
+    z-index: 9;
+}
+#btn
+{
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 40px;
+    background: #fff;
+    color: #2b1055;
+    font-size: 1.5em;
+    z-index: 9;
+    transform: translateY(100px);
+}
+.sec
+{
+    position: relative;
+    padding: 100px;
+    background: #1c0522;
+    min-width: 120%;
+}
+.sec h2
+{
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: #bd0cea;
+}
+.sec p
+{
+    font-size: 1em;
+    color: #fff; 
+}
+.sec h1
+{
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: #bd0cea;
+}
+.sec a
+{
+    font-size: 1em;
+    color: #fff; 
+}
+.sec g
+{
+    font-size: 1em;
+    color: rgb(0, 248, 207); 
+}
+
+#btn2
+{
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 40px;
+    border-radius: 40px;
+    background: #fff;
+    color: #2b1055;
+    font-size: 1.5em;
+    z-index: 9;
+    transform: translateY(1000px);
+
+}
+.sec
+{
+    position: relative;
+    padding: 200px;
+    background: #1c0522;
+    transform: translateY(1900px);
+    width: 900px;
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+    left: -32.5em;
+    
+
+}
+.sec h2
+{
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: #bd0cea;
+}
+.sec p
+{
+    font-size: 1em;
+    color: #fff; 
+}
+.sec h1
+{
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: #bd0cea;
+}
+.sec a
+{
+    font-size: 1em;
+    color: #fff; 
+}
+.sec g
+{
+    font-size: 1em;
+    color: rgb(0, 248, 207); 
+}
+.sec i
+{
+    font-size: 1em;
+    color: #fff(0, 248, 207); 
+}
+.sec h3
+{
+    font-size: 1em;
+    color: rgb(0, 248, 207); 
+}
+#btn3
+{
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 40px;
+    border-radius: 40px;
+    background: rgb(255, 255, 255);
+    color: #1c0522;
+    font-size: 1.5em;
+    z-index: 9;
+    transform: translateY(10px);
+    left: ;
+}
+.sec10
+{
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: #000;
+}
