@@ -24,7 +24,27 @@
     <a href="#sec2" id="btn">Zajímavosti</a>
     <a href="#sec3" id="btn">Hry</a>
     <a href="#sec4" id="btn">Kontakt</a>
-    <a href="https://i.imgflip.com/53246t.jpg" target="_blank" id="btn">Barva</a>
+    <a href="javascript:volid(0)" onclick="randomPhoto()" id="btn">Režim</a>
+    <section>
+        <script>
+            function randomPhoto(){
+                const photos = [
+                    'creepy.jpg',
+                    'exploze.jpg',
+                    'morning.jpg',
+                    'reakce.jpg'
+                ];
+                // Vybereme náhodný index z pole
+                 const randomIndex = Math.floor(Math.random() * photos.length);
+
+                // Odkaz na náhodně vybranou fotku
+                const selectedPhoto = photos[randomIndex];
+
+                // Otevřeme fotku v novém okně/tabu
+                window.open(selectedPhoto, '_blank');
+                }
+        </script>
+    </section>
     <label>
         <input type="checkbox">
         <span class="check"></span>
