@@ -73,7 +73,7 @@ transform: translateX(0px);
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
-body
+body/*pozadi*/
 {
     min-height: 100vh;
     max-width: 65%;
@@ -155,7 +155,7 @@ section
     font-size: 7.5vw;
     z-index: 9;
 }
-#textos
+#textos/*nadpis Gloom*/
 {
     position: absolute;
     color: #9000ffa0;
@@ -175,7 +175,7 @@ section
     z-index: 9;
     transform: translateY(100px);
 }
-.sec
+.sec/*Sloupec s textem, nejvetsi*/
 {
     position: relative;
     padding: 100px;
@@ -223,7 +223,7 @@ section
     transform: translateY(1000px);
 
 }
-.sec
+.sec/*Sloupec s textem, nejvetsi*/
 {
     position: relative;
     padding: 200px;
@@ -234,7 +234,8 @@ section
     border-top-right-radius: 100px;
     border-bottom-left-radius: 100px;
     border-bottom-right-radius: 100px;
-    left: -45em;
+    left: -30.5em;
+    
 
 }
 .sec h2
