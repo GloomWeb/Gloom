@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2023.ico" type="image/x-icon">
+  <title>Netflix Česko – Sledujte filmy a pořady online</title>
+  <style>
+    :root {
+      --netflix-red: #e50914;
+      --netflix-red-hover: #c11119;
+      --bg-dark: #141414;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ------------------------------------------------ */
+    /* UNIVERZÁLNÍ STYLY & HLAVIČKY                     */
+    /* ------------------------------------------------ */
+    .hidden { display: none !important; }
+
+    .background-image {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: url('pozadi.jpg') center/cover no-repeat;
+      z-index: -2;
+    }
+
+    .background-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.9) 100%);
+      z-index: -1;
+    }
+
+    header.landing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 6%;
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      z-index: 10;
+    }
+
+    .netflix_logo {
+      height: 120px; 
+      width: auto;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .lang-select {
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    .btn-login-fake {
+      background-color: var(--netflix-red);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-login-fake:hover { background-color: var(--netflix-red-hover); }
+
+    /* ------------------------------------------------ */
+    /* OBRAZOVKA 1: ÚVODNÍ VÝZVA (LOGIN SCREEN)         */
+    /* ------------------------------------------------ */
+    #loginScreen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .hero-text h2 {
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 25px;
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 18px 20px;
+      font-size: 1.1rem;
+      background: rgba(15, 15, 15, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      color: white;
+      outline: none;
+    }
+
+    .input-group button {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      border: none;
+      padding: 18px 32px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group button:hover { background-color: var(--netflix-red-hover); }
+
+    /* POP-UP MODAL */
+    .login-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .login-box {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 50px 60px;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 8px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.9);
+    }
+
+    .login-box h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 14px;
+      background: #333;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .login-box .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--netflix-red);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .login-box-footer {
+      margin-top: 25px;
+      color: #8c8c8c;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ------------------------------------------------ */
+    /* OBRAZOVKA 2: REALNÝ NETFLIX DASHBOARD             */
+    /* ------------------------------------------------ */
+    #dashboardScreen {
+      background-color: var(--bg-dark);
+      min-height: 100vh;
+      color: white;
+      padding-bottom: 60px;
+    }
+
+    /* Navigace */
+    nav.dash-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 4%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 10%, transparent);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 30;
+      transition: background-color 0.4s;
+    }
+
+    .dash-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+    }
+
+    .dash-menu {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      font-size: 0.9rem;
+      color: #e5e5e5;
+    }
+
+    .dash-menu li { cursor: pointer; transition: color 0.2s; }
+    .dash-menu li:hover, .dash-menu li.active { color: #fff; font-weight: bold; }
+
+    .dash-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: #e50914;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    /* HLAVNÍ BANNER - HARRY POTTER */
+    .hero-banner {
+      height: 80vh;
+      background: linear-gradient(to top, var(--bg-dark) 5%, transparent 40%),
+                  linear-gradient(to right, rgba(0,0,0,0.85) 25%, transparent 65%),
+                  url('https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/04/Harry-Potter-goblet-of-fire.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 4% 100px 4%;
+      position: relative;
+    }
+
+    .n-series-tag {
+      color: var(--netflix-red);
+      font-weight: 800;
+      letter-spacing: 3px;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .banner-title {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 15px;
+      text-shadow: 2px 4px 10px rgba(0,0,0,0.8);
+      max-width: 700px;
+      line-height: 1.05;
+    }
+
+    .banner-desc {
+      max-width: 580px;
+      font-size: 1.15rem;
+      line-height: 1.4;
+      margin-bottom: 25px;
+      color: #e5e5e5;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+    }
+
+    .banner-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn-play-hero {
+      background: white;
+      color: black;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+    .btn-play-hero:hover { background: rgba(255,255,255,0.8); }
+
+    .btn-info-hero {
+      background: rgba(109, 109, 110, 0.7);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-info-hero:hover { background: rgba(109, 109, 110, 0.4); }
+
+    /* REGÁLY S FILMY (ROWS) */
+    .movie-section {
+      padding: 0 4%;
+      margin-top: -40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .row-title {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      margin-top: 35px;
+      font-weight: bold;
+      color: #e5e5e5;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .movie-card {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: #222;
+      aspect-ratio: 16 / 9;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.08);
+      z-index: 20;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Blesky a odznaky */
+    .movie-card .badge-top {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--netflix-red);
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 3px 7px;
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .movie-card .badge-surprise {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ffd700;
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 3px 7px;
+      border-radius: 3px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .card-info-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .movie-card:hover .card-info-overlay {
+      opacity: 1;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    .card-meta .match {
+      color: #46d369;
+      font-weight: bold;
+    }
+
+    .card-meta .age-rating {
+      border: 1px solid #aaa;
+      padding: 0 4px;
+      font-size: 0.65rem;
+    }
+
+    /* ------------------------------------------------ */
+    /* OBRAZOVKA 3: PŘEHRÁVAČ VIDEA                     */
+    /* ------------------------------------------------ */
+    #videoModal {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      max-height: 100vh;
+      outline: none;
+      object-fit: contain;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 24px;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 101;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .close-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* UPOZORNĚNÍ PRO ZAMKNUTÉ FILMY */
+    .toast-alert {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(20, 20, 20, 0.95);
+      border-left: 4px solid var(--netflix-red);
+      padding: 16px 24px;
+      border-radius: 4px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pozadí pro úvodní stránku -->
+  <div class="background-image" id="bgImg"></div>
+  <div class="background-overlay" id="bgOverlay"></div>
+
+  <!-- Hlavička pro úvodní stránku -->
+  <header class="landing-header" id="landingHeader">
+    <div class="logo">
+      <img src="netflix_logo.png" alt="Netflix" class="netflix_logo">
+    </div>
+    <div class="header-right">
+      <select class="lang-select">
+        <option>🌐 Čeština</option>
+      </select>
+      <button class="btn-login-fake" onclick="openLoginModal()">Přihlásit se</button>
+    </div>
+  </header>
+
+  <!-- 1. ÚVODNÍ OBRAZOVKA -->
+  <div id="loginScreen">
+    <div class="hero-text">
+      <h1>Nekonečný přísun<br>zábavy už od<br>259 Kč/měsíc</h1>
+      <h2>Novinky každý týden. Zrušení kdykoli.</h2>
+      <p>Jste připraveni se dívat? Pro vytvoření nebo obnovení členství zadejte e-mail.</p>
+    </div>
+    
+    <div class="input-group">
+      <input type="password" id="passInput" placeholder="E-mailová adresa" onkeypress="handleKeyPress(event)">
+      <button onclick="checkPasswordFromInput()">Začít ›</button>
+    </div>
+  </div>
+
+  <!-- POP-UP OKNO PRO PŘIHLÁŠENÍ -->
+  <div id="loginModal" class="login-modal-overlay hidden">
+    <div class="login-box">
+      <h2>Přihlásit se</h2>
+      <input type="text" id="modalEmail" placeholder="E-mail nebo telefonní číslo" value="David@netflix.cz">
+      <input type="password" id="modalPass" placeholder="Heslo" onkeypress="handleKeyPressModal(event)">
+      <button class="btn-submit" onclick="checkPasswordFromModal()">Přihlásit se</button>
+      
+      <div class="login-box-footer">
+        <label><input type="checkbox" checked> Zapamatovat si mě</label>
+        <a href="#" style="color: #b3b3b3; text-decoration: none;" onclick="alert('Nápověda: Zadej tvé speciální datum!')">Nápověda k heslu</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. NETFLIX NABÍDKA / PALUBNÍ DESKA -->
+  <div id="dashboardScreen" class="hidden">
+    <!-- Horní navigace -->
+    <nav class="dash-nav">
+      <div class="dash-nav-left">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" class="netflix_logo">
+        <ul class="dash-menu">
+          <li class="active">Domů</li>
+          <li>Pořady</li>
+          <li>Filmy</li>
+          <li>Nové a oblíbené</li>
+          <li>Můj seznam</li>
+        </ul>
+      </div>
+      <div class="dash-nav-right">
+        <span>🔍</span>
+        <span>🔔</span>
+        <div class="user-avatar">♥</div>
+      </div>
+    </nav>
+
+    <!-- Hlavní Banner (HARRY POTTER - MOJE PŘEKVAPENÍ) -->
+    <div class="hero-banner">
+      <div class="n-series-tag"><span>N</span> SPECIÁLNÍ EDICE</div>
+      <h1 class="banner-title">Harry Potter</h1>
+      <p class="banner-desc">Nový díl z oblíbené ságy Harry Potter. Příběh se odehrává v Bradavicích, škole čar a kouzel. Ponoř se do kouzelného světa plného tajemství a záhad.</p>
+      <div class="banner-buttons">
+        <button class="btn-play-hero" onclick="playVideo()">► Přehrát pořad</button>
+        <button class="btn-info-hero" onclick="playVideo()">ⓘ Více informací</button>
+      </div>
+    </div>
+
+    <!-- Mřížky filmů (Rows) -->
+    <div class="movie-section">
+      
+      <!-- REGÁL 1: TRENDY V ČESKU -->
+      <div class="row-title">Trendy v Česku dnešního dne</div>
+      <div class="movie-grid">
+        
+        <!-- HARRY POTTER (MOJE PŘEKVAPENÍ - HLAVNÍ TITUL) -->
+        <div class="movie-card" onclick="playVideo()" style="border: 2px solid var(--netflix-red);">
+          <span class="badge-top">TOP 1</span>
+          <span class="badge-surprise">NOVÉ</span>
+          <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/04/Harry-Potter-goblet-of-fire.jpg" alt="Harry Potter">
+          <div class="card-info-overlay">
+            <div class="card-title">▶ Harry Potter</div>
+            <div class="card-meta">
+              <span class="match">100% shoda</span>
+              <span class="age-rating">12+</span>
+              <span>Speciál</span>
+              <span>HD</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Stranger Things')">
+          <span class="badge-top">TOP 2</span>
+          <img src="https://th.bing.com/th/id/R.9bfe0c4ef823762d4d4dd6c8c0049dfe?rik=3TnXelYEnQE%2b6A&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f4%2fd%2fd%2f980232-free-download-stranger-things-wallpapers-1920x1080.jpg&ehk=kcAg5HVSgatL0WCLbrFQpD4nEyBjn6mZeJi9Jgwcn0c%3d&risl=&pid=ImgRaw&r=0" alt="Stranger Things">
+          <div class="card-info-overlay">
+            <div class="card-title">Stranger Things</div>
+            <div class="card-meta"><span class="match">98% shoda</span><span class="age-rating">16+</span><span>4 Řady</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Wednesday')">
+          <span class="badge-top">TOP 3</span>
+          <img src="https://cawa.ru/wp-content/uploads/2022/12/thumb_wednesday-series-ost-2022.jpg" alt="Wednesday">
+          <div class="card-info-overlay">
+            <div class="card-title">Wednesday</div>
+            <div class="card-meta"><span class="match">96% shoda</span><span class="age-rating">13+</span><span>1 Řada</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Zaklínač')">
+          <span class="badge-top">TOP 4</span>
+          <img src="https://wallpapercave.com/wp/wp7933096.jpg" alt="Zaklínač">
+          <div class="card-info-overlay">
+            <div class="card-title">Zaklínač</div>
+            <div class="card-meta"><span class="match">95% shoda</span><span class="age-rating">18+</span><span>3 Řady</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Squid Game')">
+          <span class="badge-top">TOP 5</span>
+          <img src="https://www.digikala.com/mag/wp-content/uploads/2021/10/squid-game-768x488.jpg" alt="Squid Game">
+          <div class="card-info-overlay">
+            <div class="card-title">Hra na oliheň</div>
+            <div class="card-meta"><span class="match">99% shoda</span><span class="age-rating">18+</span><span>2 Řady</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- REGÁL 2: SCI-FI & FANTASY TRHÁKY -->
+      <div class="row-title">Fantasy & Napínavé trháky</div>
+      <div class="movie-grid">
+
+        <div class="movie-card" onclick="showLockedAlert('Papírový dům')">
+          <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=600&auto=format&fit=crop" alt="Papírový dům">
+          <div class="card-info-overlay">
+            <div class="card-title">Papírový dům</div>
+            <div class="card-meta"><span class="match">97% shoda</span><span class="age-rating">16+</span><span>5 Řad</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Peaky Blinders')">
+          <img src="https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?q=80&w=600&auto=format&fit=crop" alt="Peaky Blinders">
+          <div class="card-info-overlay">
+            <div class="card-title">Peaky Blinders</div>
+            <div class="card-meta"><span class="match">98% shoda</span><span class="age-rating">18+</span><span>6 Řad</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Interstellar')">
+          <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop" alt="Interstellar">
+          <div class="card-info-overlay">
+            <div class="card-title">Interstellar</div>
+            <div class="card-meta"><span class="match">99% shoda</span><span class="age-rating">12+</span><span>Film</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Duna')">
+          <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=600&auto=format&fit=crop" alt="Duna">
+          <div class="card-info-overlay">
+            <div class="card-title">Duna: Část Druhá</div>
+            <div class="card-meta"><span class="match">96% shoda</span><span class="age-rating">13+</span><span>Film</span></div>
+          </div>
+        </div>
+
+        <div class="movie-card" onclick="showLockedAlert('Pán Prstenů')">
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop" alt="Pán Prstenů">
+          <div class="card-info-overlay">
+            <div class="card-title">Pán prstenů</div>
+            <div class="card-meta"><span class="match">99% shoda</span><span class="age-rating">12+</span><span>Trilogie</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- UPOZORŇOVACÍ TOAST MSG -->
+  <div id="toastAlert" class="toast-alert hidden">
+    <span>🔒</span>
+    <span id="toastText">Tento titul je uzamčen! Nejdříve se podívej na Harryho Pottera.</span>
+  </div>
+
+  <!-- 3. PŘEHRÁVAČ VIDEA -->
+  <div id="videoModal" class="hidden">
+    <button class="close-btn" onclick="closeVideo()">←</button>
+    <video id="myVideo" controls>
+      <source src="moje_video.mp4" type="video/mp4">
+      Váš prohlížeč nepodporuje toto video.
+    </video>
+  </div>
+
+  <script>
+    const TAJNE_HESLO = "28102025";
+
+    function openLoginModal() {
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('modalPass').focus();
+    }
+
+    function checkPasswordFromInput() {
+      const input = document.getElementById('passInput').value;
+      if (input === TAJNE_HESLO) {
+        unlockNetflix();
+      } else {
+        openLoginModal();
+        document.getElementById('modalPass').value = input;
+      }
+    }
+
+    function checkPasswordFromModal() {
+      const input = document.getElementById('modalPass').value;
+      if (input === TAJNE_HESLO) {
+        unlockNetflix();
+      } else {
+        alert('Špatné heslo! Zkus to znovu.');
+      }
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') checkPasswordFromInput();
+    }
+
+    function handleKeyPressModal(e) {
+      if (e.key === 'Enter') checkPasswordFromModal();
+    }
+
+    function unlockNetflix() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('landingHeader').classList.add('hidden');
+      document.getElementById('bgImg').classList.add('hidden');
+      document.getElementById('bgOverlay').classList.add('hidden');
+      document.getElementById('loginModal').classList.add('hidden');
+
+      document.getElementById('dashboardScreen').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function playVideo() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('myVideo');
+      modal.classList.remove('hidden');
+      video.play();
+      
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      }
+    }
+
+    function closeVideo() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('myVideo');
+      video.pause();
+      modal.classList.add('hidden');
+      
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    function showLockedAlert(title) {
+      const toast = document.getElementById('toastAlert');
+      const text = document.getElementById('toastText');
+      text.innerText = `Film "${title}" je zamčený. Nejprve si pusť Harry Potter (Moje Překvapení)! ⚡`;
+      toast.classList.remove('hidden');
+      
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
